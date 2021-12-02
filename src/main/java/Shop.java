@@ -6,14 +6,14 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class Shop {
     List<String> cars = new ArrayList<>();
-    Lock vendor = new ReentrantLock(true);
-    Condition carCondition = vendor.newCondition();
-    public static final int TIME_TO_WAIT = 1000;
+    Lock consumer = new ReentrantLock(true);
+    Condition carCondition = consumer.newCondition();
+    public static final int TIME_TO_WAIT = 5000;
     public static final int MAXCOUNT = 10;
 
 
     public void buyCar(){
-        vendor.lock();
+        consumer.lock();
         try {
             String consumerName = Thread.currentThread().getName();
             System.out.printf("%s зашел в автосалон\n", consumerName);
@@ -28,12 +28,12 @@ public class Shop {
             }
             System.out.printf("%s уехал на новеньком авто\n", consumerName);
         } finally {
-            vendor.unlock();
+            consumer.unlock();
         }
     }
 
     public void buildCar() {
-        vendor.lock();
+        consumer.lock();
         try {
             while (true) {
                 String vendorName = Thread.currentThread().getName();
@@ -49,7 +49,7 @@ public class Shop {
                 }
             }
         } finally {
-            vendor.unlock();
+            consumer.unlock();
         }
     }
 }
